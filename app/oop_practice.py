@@ -1,6 +1,8 @@
 from app.employee_model import Employee,Manager
 from app.employee_formatter import (format_employee,format_employee_short)
-def display_employee(employee:Employee, formatter)-> None:
+from collections.abc import Callable
+
+def display_employee(employee:Employee, formatter:Callable[[Employee],str], )-> None:
     text=formatter(employee)
     print(text)
 def main() -> None:

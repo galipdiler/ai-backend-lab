@@ -1,0 +1,31 @@
+### çalışan oluştur 
+POST http://localhost:8000/employees
+Content-Type: application/json 
+
+{
+    "name": "Galip",
+    "last_name": "Diler",
+    "department":"AI Engineering",
+    "age": 26
+}
+
+### Departman güncelle 
+PATCH http://localhost:8000/employees/123
+Content-Type: application/json
+
+{
+    "department":"LLM Engineering"
+}
+
+PATCH /employees/42
+Content-Type: application/json
+{
+    "department": "LLM Engineering"
+}
+PUT /employees/42
+Content-Type:application/json
+{
+    "name":"Galip"
+    "department":"AI Engineering"
+    "age":26
+}

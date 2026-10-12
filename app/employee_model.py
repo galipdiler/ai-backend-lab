@@ -1,8 +1,9 @@
+from app.validator import validate_age
 class Employee:
     def __init__(self, name: str, department: str, age: int) -> None:
         self.name = name
         self.department = department
-        self.age = age
+        self.age = validate_age(age)
 
     def introduce(self) -> str:
         return (
