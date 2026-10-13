@@ -86,3 +86,49 @@ def test_concurrent_duplicates_create_one_record(client):
     assert codes.count(201) == 1
     assert codes.count(409) == 7
     assert len(employees) == 1
+def test_deleted_employee_cannot_be_retrieved(client):
+    body = {
+        "name": "Ayşe",
+        "last_name": "Kaya",
+        "department": "Data Engineering",
+        "age": 28,
+    }
+
+    created = client.post("/employees", json=body)
+    assert created.status_code == 201
+    employee_id = created.json()["id"]
+
+    deleted = client.delete(f"/employees/{employee_id}")
+
+    assert deleted.status_code == 204
+    assert deleted.content == b""
+
+    fetched = client.get(f"/employees/{employee_id}")
+    assert fetched.status_code == 404
+
+    deleted_again = client.delete(f"/employees/{employee_id}")
+    assert deleted_again.status_code == 404
+@pytest.mark.parametrize(
+    "invalid_body",
+    [
+        {"department": ""},
+        {"department": "   "},
+        {},
+    ],
+)
+def test_invalid_employee(client,invalid_body):
+    body={
+        "name":"Ece",
+        "last_name":"Can",
+        "department":"ML Engineer",
+        "age":4,
+    }
+    created= client.post("/employees",json=body)
+    assert created.status_code==201
+    original= created.json()
+    employee_id=original["id"]
+    response= client.patch(f"employees/{employee_id}",json=invalid_body,)
+    assert response.status_code==422
+    saved=client.get(f"/employees/{employee_id}")
+    assert saved.status_code==200
+    assert saved.json()== original
